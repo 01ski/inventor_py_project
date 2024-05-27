@@ -17,7 +17,7 @@ def read_sensor_data(sensor_instance):
     """
     global temperature, gas, heater, status
     data = sensor_instance.read()
-    temperature, gas, heater, status = data[0], data[3], data[4], data[5]
+    temperature, gas, status = data[0], data[3], data[4]
     heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
 
