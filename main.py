@@ -1,15 +1,8 @@
-"""This program is using the User switch on the Inventor2040W to switch between X ambient light modes.
-The intensity and the blinking pattern of the light change in relation with the air temperature and humidity"""
-
 from inventor import Inventor2040W, NUM_LEDS
 from time import sleep
 from breakout_bme68x import BreakoutBME68X, STATUS_HEATER_STABLE
 from pimoroni_i2c import PimoroniI2C
 
-
-#Already set some LEDs to change colour with the temperature measured by the bme680
-#every 10 loops it prints the measurements of the sensor
-#goal for today: create a blinking pattern dependent on the air quality
 
 #hardware initialization
 board = Inventor2040W()
@@ -19,16 +12,19 @@ bme = BreakoutBME68X(i2c)
 
 
 def read_sensor_data(sensor_instance):
-    """remember to initialize board and sensor before calling this function
-    This function reads sensor data to these global variables"""
-    global temperature, pressure, humidity, gas, heater
-    temperature, pressure, humidity, gas, status, *_ = sensor_instance.read()
+    """This function reads sensor data to these global variables.
+    Remember to initialize board and sensor before calling this function
+    """
+    global temperature, gas, heater, status
+    data = sensor_instance.read()
+    temperature, gas, heater, status = data[0], data[3], data[4], data[5]
     heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
 
-def print_sensor_data(temp, pres, hum, gs, heat):
-    """prints neatly formatted data, 'read_sensor_data()' must be called before"""
-    print(f"{temp:0.2f}c, {pres:0.2f}Pa, {hum:0.2f}%, {gs:0.2f} Ohms, Heater: {heat}")
+def print_sensor_data(t, g, he):
+    """Prints neatly formatted data, 'read_sensor_data()' must be called before"""
+    print(f"Temperature: {t:.1f}C \tAir quality: {g:.1f} Ohms \tHeater: {he}")
+    
 
 
 def blinking_speed(gs):
@@ -87,7 +83,7 @@ def blink_temperature_leds(speed_function_blink, numleds, temp):
 
 
 
-## COLOURS
+## COLOURS rgb format
 red_r, red_g, red_b = 255, 0, 0
 orange_r, orange_g, orange_b = 249, 154, 14
 green_r, green_g, green_b = 0, 255, 0
@@ -103,7 +99,7 @@ while True:
         read_sensor_data(bme)
         #print the sensor data just every 10th iteration
         if (count_iterations % 10) == 0:
-            print_sensor_data(temperature, pressure, humidity, gas, heater)
+            print_sensor_data(temperature, gas, heater)
         count_iterations += 1
         if board.switch_pressed():
             user_switch_count += 1
