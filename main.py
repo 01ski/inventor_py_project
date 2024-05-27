@@ -30,14 +30,14 @@ def print_sensor_data(t, g, he):
 def blinking_speed(gs):
     """Based on the gas measurement, increase or decrease the speed of the blinking pattern"""
     value = gs/1000
-    if value < 50:
+    if value < 25:
         sleep_cnst = .2
-    elif 50 <= value < 75:
+    elif 25 <= value < 50:
         sleep_cnst = .5
-    elif 75 <= value < 100:
+    elif 50 <= value < 75:
         sleep_cnst = 1
-    elif 100 <= value:
-        sleep_cnst = 5
+    elif 75 <= value:
+        sleep_cnst = 1.5
     return float(sleep_cnst)
 
 
@@ -62,7 +62,7 @@ def blink_temperature_leds(speed_function_blink, numleds, temp):
     if 20.00 <= temp < 25.00:
             for i in range(0, numleds):
                 board.leds.set_rgb(i, green_r, green_g, green_b)
-    elif 18.00 <= temp < 20.00:
+    elif temp < 23.00:
         for i in range(0, numleds):
             board.leds.set_rgb(i, blue_r, blue_g, blue_b)
     elif 25.00 <= temp < 27.00:
@@ -75,11 +75,11 @@ def blink_temperature_leds(speed_function_blink, numleds, temp):
         for i in range(0, numleds):
             board.leds.set_rgb(i, purple_r, purple_g, purple_b)
     # IF THE AIR IS NOT POLLUTED, DON'T BLINK AT ALL
-    if speed_function_blink != 5:
-        sleep(speed_function_blink)
+    sleep(speed_function_blink)
+    if speed_function_blink != 1.5:
         for i in range(0, numleds):
             board.leds.set_rgb(i, 0, 0, 0)
-        sleep(speed_function_blink)
+    sleep(speed_function_blink)
 
 
 
