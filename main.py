@@ -2,6 +2,7 @@ from inventor import Inventor2040W
 from breakout_bme68x import BreakoutBME68X, STATUS_HEATER_STABLE
 from pimoroni_i2c import PimoroniI2C
 from machine import Pin
+from utime import *
 from module import *
 
 
@@ -11,7 +12,6 @@ PINS_BREAKOUT_GARDEN = {"sda": 4, "scl": 5}
 i2c = PimoroniI2C(**PINS_BREAKOUT_GARDEN)
 bme = BreakoutBME68X(i2c)
 pin = Pin(board.USER_SW_PIN, Pin.IN, Pin.PULL_DOWN)
-
 
 
 #initialize variables for the readings, values are assigned inside of
@@ -29,21 +29,25 @@ def read_sensor_data(sensor_instance):
     temperature, gas, status = data[0], data[3], data[4]
     heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
-
+times = [0,1001]
+times.append(ticks_ms())
 
 #callback function of the interrupt 
 def callback(pin):
-    global user_switch_count, interrupt_status
+    global user_switch_count, interrupt_status, times
     user_switch_count +=1
     interrupt_status = 1
+    time = ticks_ms()
+    times.append(ticks_ms())
+
 #interrupt initialization         
 pin.irq(trigger=pin.IRQ_FALLING, handler=callback)
-
 
 #counters initialization
 user_switch_count = 0
 interrupt_status = 0
 count_iterations = 0
+lap = ticks_ms()
 
 
 while True:
@@ -54,13 +58,15 @@ while True:
         if (count_iterations % 5) == 0:
             print_sensor_data(temperature, gas, heater)
         count_iterations += 1
-
+        if end_loop(board, times):
+            break
+        
     except KeyboardInterrupt:
         board.leds.clear()
         break
 
 
-    
+
     
 
 

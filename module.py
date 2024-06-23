@@ -1,9 +1,5 @@
 from time import sleep
 from inventor import NUM_LEDS
-from breakout_bme68x import STATUS_HEATER_STABLE
-
-
-
 
 
 def print_sensor_data(t, g, he):
@@ -40,7 +36,6 @@ def number_leds(counter_press):
     return int(leds)
     
 
-
 ## COLOURS rgb format
 red_r, red_g, red_b = 255, 0, 0
 orange_r, orange_g, orange_b = 249, 154, 14
@@ -52,11 +47,7 @@ purple_r, purple_g, purple_b = 255, 0, 255
 def blink_temperature_leds(speed_function_blink, numleds, temp, board_instance):
     """Sets an amount of LED's (depending on numleds) on the inventor board into a blinking pattern,
     the colour depends on the temperature measured by the temperature sensor
-    The blinking speed depends on 'blinking_pattern()' """
-    # if numleds % 4 == 0:
-    #     #set a certain amount of LEDs to one colour representing the humidity
-    #     #the rest should be another colour
-    # else:    
+    The blinking speed depends on 'blinking_pattern()' """    
     if 23.00 <= temp < 25.00:
             for i in range(0, numleds):
                 board_instance.leds.set_rgb(i, green_r, green_g, green_b)
@@ -72,9 +63,20 @@ def blink_temperature_leds(speed_function_blink, numleds, temp, board_instance):
     elif 30.00 < temp:
         for i in range(0, numleds):
             board_instance.leds.set_rgb(i, purple_r, purple_g, purple_b)
-    # IF THE AIR IS NOT POLLUTED, DON'T BLINK AT ALL
     sleep(speed_function_blink)
-    if speed_function_blink != 1.5:
-        for i in range(0, numleds):
-            board_instance.leds.set_rgb(i, 0, 0, 0)
+    for i in range(0, numleds):
+        board_instance.leds.set_rgb(i, 0, 0, 0)
     sleep(speed_function_blink)
+
+
+def end_loop(board_instance, time_list):
+    """Compares the last two items of the given list, which
+    stores the time difference between the user_button clicks.
+    If the interval is small enough, it breaks the loop and turns
+    all LED's off"""
+    if (time_list[-1] - time_list[-2]) < 1000:
+        board_instance.leds.clear()
+        print("\nSee ya!\n")
+        return 1
+    else:
+        return 0
