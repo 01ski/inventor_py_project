@@ -69,6 +69,19 @@ def blink_temperature_leds(speed_function_blink, numleds, temp, board_instance):
     sleep(speed_function_blink)
 
 
+def rainbow(board_instance):
+    VALUE = 1.0
+    BRIGHTNESS = 0.8
+    DELAY = .05
+    # Update each LED in turn to create a rainbow
+    for i in range(NUM_LEDS):
+        hue = float(i) / NUM_LEDS
+        board_instance.leds.set_hsv(i, hue, VALUE, BRIGHTNESS)
+        sleep(DELAY)
+    board_instance.leds.clear()
+    sleep(DELAY*2)
+
+
 def end_loop(board_instance, time_list):
     """Compares the last two items of the given list, which
     stores the time difference between the user_button clicks.
@@ -76,7 +89,12 @@ def end_loop(board_instance, time_list):
     all LED's off"""
     if (time_list[-1] - time_list[-2]) < 1000:
         board_instance.leds.clear()
+        for i in range(3):
+            rainbow(board_instance)
         print("\nSee ya!\n")
         return 1
     else:
         return 0
+    
+
+
