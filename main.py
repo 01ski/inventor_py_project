@@ -3,7 +3,11 @@ from breakout_bme68x import BreakoutBME68X, STATUS_HEATER_STABLE
 from pimoroni_i2c import PimoroniI2C
 from machine import Pin
 from utime import *
-from module import *
+
+#custom modules
+from global_module import *
+from temperature_module import *
+from humidity_module import *
 
 
 #hardware initialization
@@ -16,7 +20,7 @@ pin = Pin(board.USER_SW_PIN, Pin.IN, Pin.PULL_DOWN)
 
 #initialize variables for the readings, values are assigned inside of
 #the 'read_sensor_data' function
-temperature, gas, status, heater = None, None, None, None
+temperature, gas, status, heater, humidity = None, None, None, None, None
 
 def read_sensor_data(sensor_instance):
     """This function reads sensor data to the following global variables.
@@ -26,18 +30,16 @@ def read_sensor_data(sensor_instance):
     """
     global temperature, gas, status, humidity, heater
     data = sensor_instance.read()
-    temperature, gas, status = data[0], data[3], data[4]
+    temperature, gas, status, humidity = data[0], data[3], data[4], data[2]
     heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
-times = [0,1001]
-times.append(ticks_ms())
+times = [0,0,0]
 
 #callback function of the interrupt 
 def callback(pin):
     global user_switch_count, interrupt_status, times
     user_switch_count +=1
     interrupt_status = 1
-    time = ticks_ms()
     times.append(ticks_ms())
 
 #interrupt initialization         
@@ -47,17 +49,26 @@ pin.irq(trigger=pin.IRQ_FALLING, handler=callback)
 user_switch_count = 0
 interrupt_status = 0
 count_iterations = 0
-lap = ticks_ms()
+switch_counter = 0
 
 
 while True:
     try:
         read_sensor_data(bme)
-        blink_temperature_leds(blinking_speed(gas), number_leds(user_switch_count), temperature, board)
+        if switch_function(times):
+            switch_counter += 1
+            if (switch_counter % 2) != 0:
+                print('\nSwitched to humidity display mode!\n')
+            else:
+                print('\nSwitched to temperature and gas-particles display mode!\n')
+        if (switch_counter % 2) == 0:
+            blink_temperature_leds(blinking_speed(gas), number_leds(user_switch_count), temperature, board)
+        elif (switch_counter % 2) != 0:
+            humidity_leds(humidity, board)
         #print the sensor data just every 5th iteration
-        if (count_iterations % 5) == 0:
-            print_sensor_data(temperature, gas, heater)
         count_iterations += 1
+        if (count_iterations % 5) == 0:
+            print_sensor_data(temperature, gas, heater, humidity)
         if end_loop(board, times):
             break
         

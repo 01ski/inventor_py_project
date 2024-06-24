@@ -1,11 +1,5 @@
-from time import sleep
+from utime import sleep
 from inventor import NUM_LEDS
-
-
-def print_sensor_data(t, g, he):
-    """Prints neatly formatted data, 'read_sensor_data()' must be called before"""
-    print(f"Temperature: {t:.1f}C \tAir quality: {g:.1f} Ohms \tHeater: {he}")
-    
 
 
 def blinking_speed(gs):
@@ -45,7 +39,7 @@ purple_r, purple_g, purple_b = 255, 0, 255
 
 
 def blink_temperature_leds(speed_function_blink, numleds, temp, board_instance):
-    """Sets an amount of LED's (depending on numleds) on the inventor board into a blinking pattern,
+    """Sets an amount of LEDs (depending on numleds) on the inventor board into a blinking pattern,
     the colour depends on the temperature measured by the temperature sensor
     The blinking speed depends on 'blinking_pattern()' """    
     if 23.00 <= temp < 25.00:
@@ -67,34 +61,3 @@ def blink_temperature_leds(speed_function_blink, numleds, temp, board_instance):
     for i in range(0, numleds):
         board_instance.leds.set_rgb(i, 0, 0, 0)
     sleep(speed_function_blink)
-
-
-def rainbow(board_instance):
-    VALUE = 1.0
-    BRIGHTNESS = 0.8
-    DELAY = .05
-    # Update each LED in turn to create a rainbow
-    for i in range(NUM_LEDS):
-        hue = float(i) / NUM_LEDS
-        board_instance.leds.set_hsv(i, hue, VALUE, BRIGHTNESS)
-        sleep(DELAY)
-    board_instance.leds.clear()
-    sleep(DELAY*2)
-
-
-def end_loop(board_instance, time_list):
-    """Compares the last two items of the given list, which
-    stores the time difference between the user_button clicks.
-    If the interval is small enough, it breaks the loop and turns
-    all LED's off"""
-    if (time_list[-1] - time_list[-2]) < 1000:
-        board_instance.leds.clear()
-        for i in range(3):
-            rainbow(board_instance)
-        print("\nSee ya!\n")
-        return 1
-    else:
-        return 0
-    
-
-
