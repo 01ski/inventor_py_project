@@ -1,6 +1,10 @@
 from utime import sleep
 from inventor import NUM_LEDS
 
+"""
+This module contains functions, which are used to control the board
+and switch between the two modes
+"""
 
 def print_sensor_data(t, g, he, hu):
     """Prints neatly formatted data, 'read_sensor_data()' must be called before"""

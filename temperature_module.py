@@ -1,6 +1,10 @@
 from utime import sleep
 from inventor import NUM_LEDS
 
+"""This module contains the functions, which make the 
+temperature-mode work
+"""
+
 
 def blinking_speed(gs):
     """Based on the gas measurement, increase or decrease the speed of the blinking pattern"""

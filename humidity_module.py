@@ -1,5 +1,8 @@
 from utime import sleep
 
+"""This module contains the function, which makes 
+the humidity mode work
+"""
 
 def humidity_leds(humidity, board_instance):
     """Displays a pattern on the LED's depending on the air
