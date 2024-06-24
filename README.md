@@ -6,6 +6,7 @@ This is my **Fundamentals of Programming 1** project.
 It is based on the *Inventor2040W* board and the *bmx680* breakout both from Pimoroni.
 The code is running in Micropython.
 I really enjoyed coding this project, I hope you'll have fun reading it!
+I've put a lot of effort into writing the Markdown file, it would be a pity not viewing it from [github](https://github.com/01ski/inventor_py_project.git) 
 
 **Follow the next steps to get the project running:**
 ### 1. Download the project folder
