@@ -31,11 +31,11 @@ Once you have set up the environment you can decide whether to use Thonny or mpr
 ### 3. Connect to the device, copy files on it
 If you haven't done it yet, change directory to the place where you stored the project folder.
 
-```
+```powershell
 cd /projectpath
 ```
 
-Plug in your device, then to connect your device to mpremote, type this into the command line.
+Plug in your device, then to connect your device to mpremote, typing this into the command line.
 ```
 mpremote
 ```
@@ -44,9 +44,10 @@ You should get an output like this:
 ```
 Connected to COM5
 ```
+Exit this message with Ctrl-X.
 
 Copy the modules on to your device with the following lines
-```
+```powershell
 mpremote cp global_module.py :global_module.py
 mpremote cp temperature_module.py :temperature_module.py
 mpremote cp humidity_module.py :humidity_module.py
@@ -55,23 +56,22 @@ mpremote cp main.py :main.py
 ### 4. Run the program 
 There are two ways to run the program. 
 Since you have copied the main.py file to the device, the program can run by itself without the need for a connection to mpremote. 
-##### 1. Run the program without mpremote:
+#### 1. Run the program without mpremote:
     To run on its own the device just needs to be connected to the power.
     Because of the interference with mpremote, you first have to disconnect
     the device from mpremote. 
-Enter `mpremote disconnect`, press Enter, then press Ctrl-X
+Enter `mpremote disconnect`, press Enter, then press Ctrl-X.
 Hit the **Reset** button on the Inventor board --- TADAAA!
 
-##### 2. Run the program with mpremote:
-    If you run the program via mpremote you'll see some interesting output 
-    containing temperature, humidity and air quality data
-Enter `mpremote run :main.py` or `mpremote run main.py` (the second will run the main.py from the PC filesystem, but since you copied the same file to the device it will make no difference)
+#### 2. Run the program with mpremote:
+    If you run the program via mpremote you'll see some interesting output containing temperature, humidity and air quality data
+Enter `mpremote run :main.py` or `mpremote run main.py` (the second will run the *main.py* from the PC filesystem, but since you copied the same file to the device it will make no difference)
 
 Now you should see some output containing **air temperature, humidity and air pollution**
 
 ### 5. The program: explained
 The program has two modes:
-##### 1. First mode (default)
+#### 1. First mode (default)
 It displays on the LEDs the room temperature:
 
 |Colour   |Temperature |
@@ -83,14 +83,17 @@ It displays on the LEDs the room temperature:
 |Purple   |> 30 °C     |
 
 The blinking of the LEDs shows how polluted the air is. There are four speeds: the faster the blinking, the more polluted is the air. 
+
 *Try altering the sensor readings by breathing on it or spraying parfume next to it*
 
-##### 2. The USER - Switch
+
+#### 2. The USER - Switch
 - Press ONCE: Turns on/off more LEDs
 - Press TWICE (fast): Switch to *humidity-mode*
 - Press THREE TIMES: Turn off
 
-##### 3. Second mode (humidity-mode)
+
+#### 3. Second mode (humidity-mode)
 It displays how much humidity the sensor is measuring, every turned on LED corresponds to 10% relative humidity.
 
     e.g. if 4 LEDs are blinking, the humidity is between 40-50%
