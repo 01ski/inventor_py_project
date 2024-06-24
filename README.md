@@ -89,8 +89,8 @@ The blinking of the LEDs shows how polluted the air is. There are four speeds: t
 
 #### 2. The USER - Switch
 - Press ONCE: Turns on/off more LEDs
-- Press TWICE (fast): Switch to *humidity-mode*
-- Press THREE TIMES: Turn off
+- Press TWICE in a row (fast): Switch to *humidity-mode*
+- Press THREE TIMES in a row (fast): Turn off
 
 
 #### 3. Second mode (humidity-mode)
